@@ -44,6 +44,10 @@ config RVV
   bool "RISC-V Vector Extension v1.0"
   default y
 
+config RVMATRIX
+  bool "RISC-V Matrix Extension v0.3"
+  default n
+
 config RV_ZVFH_MIN
   bool "RISC-V Zvfhmin Extension V1.0"
   depends on RVV

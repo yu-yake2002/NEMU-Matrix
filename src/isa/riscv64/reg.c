@@ -128,6 +128,11 @@ void isa_reg_display() {
     printf("%2d: tdata1: " FMT_WORD " tdata2: " FMT_WORD "\n", i, cpu.TM->triggers[i].tdata1.val, cpu.TM->triggers[i].tdata2.val);
   }
 #endif // CONFIG_RV_SDTRIG
+
+#ifdef CONFIG_RVMATRIX
+  printf("mtype: " FMT_WORD " mtilem: " FMT_WORD " mtilen: " FMT_WORD "\n", mtype->val, mtilem->val, mtilen->val);
+  printf("mtilek: " FMT_WORD " mstart: " FMT_WORD " mcsr: " FMT_WORD "\n", mtilek->val, mstart->val, mcsr->val);
+#endif // CONFIG_RVMATRIX
   fflush(stdout);
 }
 

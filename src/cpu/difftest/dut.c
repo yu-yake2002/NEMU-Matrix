@@ -26,6 +26,9 @@ void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
 void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 int  (*ref_difftest_store_commit)(uint64_t *addr, uint64_t *data, uint8_t *mask) = NULL;
+#ifdef CONFIG_RVMATRIX
+int  (*ref_difftest_matrix_store_commit)(uint64_t *base, uint64_t *stride, uint32_t *row, uint32_t *column, uint32_t *width, bool *transpose) = NULL;
+#endif // CONFIG_RVMATRIX
 #ifdef CONFIG_DIFFTEST
 
 IFDEF(CONFIG_DIFFTEST_REF_QEMU_DL, __thread uint8_t resereve_for_qemu_tls[4096]);

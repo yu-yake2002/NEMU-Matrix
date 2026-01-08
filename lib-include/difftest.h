@@ -55,7 +55,7 @@ enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
 #endif //CONFIG_RVH
 
 #if defined (RV64_FULL_DIFF) && defined (CONFIG_RVMATRIX)
-#define RVMATRIX_EXT_REG_SIZE (sizeof(uint64_t) * (9)) // m_name m_size
+#define RVMATRIX_EXT_REG_SIZE (sizeof(uint64_t) * (14)) // xmcsr(6) xmisa xtlenb xtrlenb xalenb mtok mtilem mtilen mtilek
 #else
 #define RVMATRIX_EXT_REG_SIZE 0
 #endif //CONFIG_RVMATRIX

@@ -145,8 +145,8 @@ typedef struct {
 #endif // CONFIG_FPU_NONE
 
 #ifdef CONFIG_RVMATRIX
-  uint64_t xmisa, xtlenb, xtrlenb, xalenb, mtok, mtilem, mtilen, mtilek;
   uint64_t xmcsr, xmxrm, xmsat, xmfflags, xmfrm, xmsaten;
+  uint64_t xmisa, xtlenb, xtrlenb, xalenb, mtok, mtilem, mtilen, mtilek;
 #endif // CONFIG_RVMATRIX
 
 #ifdef CONFIG_RV_SDTRIG

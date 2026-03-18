@@ -48,12 +48,12 @@
   uint8_t m_d_sz = s->m_d_sz; \
   uint8_t m_s_sz = s->m_s_sz; \
   bool tilem_valid = tile_m <= ROWNUM; \
-  bool tilen_valid = tile_n <= ROWNUM && tile_n <= ARLEN / m_d_sz; \
+  bool tilen_valid = tile_n <= ROWNUM && (tile_n << m_d_sz) <= ARLEN / 8; \
   bool tilek_valid; \
   if (m_s_sz == 0 && (s->m_sz_sup & (1 << 2))) { \
-    tilek_valid = tile_k <= (TRLEN << 1); \
+    tilek_valid = ((tile_k + 1) >> 1) <= (TRLEN / 8); \
   } else { \
-    tilek_valid = tile_k <= (TRLEN >> m_s_sz); \
+    tilek_valid = (tile_k << m_s_sz) <= TRLEN / 8; \
   } \
   if (!tilem_valid || !tilen_valid || !tilek_valid) { \
     longjmp_exception(EX_II); \
@@ -254,9 +254,10 @@ def_EHelper(mmaccsu) {
   uint64_t td = s->dest.reg; \
   uint8_t m_d_sz = s->m_d_sz; \
   uint8_t m_s_sz = s->m_s_sz; \
+  uint8_t m_sz_sup = s->m_sz_sup; \
   bool tilem_valid = tile_m <= ROWNUM; \
-  bool tilen_valid = tile_n <= ROWNUM && tile_n <= ARLEN / m_d_sz; \
-  bool tilek_valid = tile_k <= TRLEN / m_s_sz; \
+  bool tilen_valid = tile_n <= ROWNUM && (tile_n << m_d_sz) <= ARLEN / 8; \
+  bool tilek_valid =  (tile_k << m_s_sz) <= TRLEN / 8; \
   if (!tilem_valid || !tilen_valid || !tilek_valid) { \
     longjmp_exception(EX_II); \
   } \
@@ -265,15 +266,21 @@ def_EHelper(mmaccsu) {
   word_t FPCALL_TYPE = FPCALL_W64; \
   switch (m_s_sz) { \
     case 0: \
-      Loge("fp8 mma not supported"); longjmp_exception(EX_II); \
+      if (m_d_sz == 1) { \
+        FPCALL_TYPE = (m_sz_sup & 1) ? FPCALL_E4M3_to_16 : FPCALL_E5M2_to_16; \
+      } else if (m_d_sz == 2) { \
+        FPCALL_TYPE = (m_sz_sup & 1) ? FPCALL_E4M3_to_32 : FPCALL_E5M2_to_32; \
+      } else { \
+        Loge("type not supported"); longjmp_exception(EX_II); \
+      } \
       break; \
     case 1: \
       switch (m_d_sz) { \
         case 1: \
-          FPCALL_TYPE = FPCALL_W16; \
+          FPCALL_TYPE = (m_sz_sup & (1 << 2)) ? FPCALL_BF16 : FPCALL_W16; \
           break; \
         case 2: \
-          FPCALL_TYPE = FPCALL_W16_to_32; \
+          FPCALL_TYPE = (m_sz_sup & (1 << 2)) ? FPCALL_BF16_to_32 : FPCALL_W16_to_32; \
           break; \
         default: \
           Loge("type not supported"); longjmp_exception(EX_II); \

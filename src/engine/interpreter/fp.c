@@ -17,6 +17,7 @@
 #include <rtl/rtl.h>
 #ifndef CONFIG_FPU_NONE
 #include MUXDEF(CONFIG_FPU_SOFT, "softfloat-fp.h", "host-fp.h")
+#include "subfloat.h"
 
 #define BOX_MASK_FP16 0xFFFFFFFFFFFF0000
 #define BOX_MASK_FP32 0xFFFFFFFF00000000
@@ -73,6 +74,24 @@ def_rtl(fpcall, rtlreg_t *dest, const rtlreg_t *src1, const rtlreg_t *src2, uint
     softfloat_roundingMode = rm;
     isa_fp_rm_check(softfloat_roundingMode);
   }
+  if (is_powprec_width(w)) {
+    switch (op) {
+      case FPCALL_ADD:
+      case FPCALL_SUB:
+      case FPCALL_MUL:
+      case FPCALL_DIV:
+      case FPCALL_MIN:
+      case FPCALL_MAX:
+        *dest = subfloat_compute_bin(op, w, *src1, *src2);
+        break;
+      case FPCALL_MADD:
+        *dest = subfloat_compute_madd(w, *dest, *src1, *src2);
+        break;
+      default:
+        panic("op = %d not supported for subfloat width %u", op, w);
+    }
+  }
+  else
   if (w == FPCALL_W16) {
     float16_t fsrc1 = rtlToF16(*src1);
     float16_t fsrc2 = rtlToF16(*src2);
@@ -218,7 +237,23 @@ def_rtl(vfpcall, rtlreg_t *dest, const rtlreg_t *src1, const rtlreg_t *src2, uin
   isa_fp_csr_check();
   softfloat_roundingMode = isa_fp_get_frm();
 
-  if (w == FPCALL_W8) {
+  if (is_powprec_width(w)) {
+    switch (op) {
+      case FPCALL_ADD:
+      case FPCALL_SUB:
+      case FPCALL_MUL:
+      case FPCALL_DIV:
+      case FPCALL_MIN:
+      case FPCALL_MAX:
+        *dest = subfloat_compute_bin(op, w, *src1, *src2);
+        break;
+      case FPCALL_MADD:
+        *dest = subfloat_compute_madd(w, *dest, *src1, *src2);
+        break;
+      default:
+        panic("op = %d not supported for subfloat width %u", op, w);
+    }
+  } else if (w == FPCALL_W8) {
     // w8 only can hold int/uint
     switch (op) {
       case FPCALL_SToDF: *dest = i32_to_f16((int32_t)(int8_t)*src1).v; break;
@@ -452,6 +487,24 @@ def_rtl(mfpcall, rtlreg_t *dest, const rtlreg_t *src1, const rtlreg_t *src2, uin
   uint32_t w = FPCALL_W(cmd);
   uint32_t op = FPCALL_OP(cmd);
   isa_fp_csr_check();
+  if (is_powprec_width(w)) {
+    switch (op) {
+      case FPCALL_ADD:
+      case FPCALL_SUB:
+      case FPCALL_MUL:
+      case FPCALL_DIV:
+      case FPCALL_MIN:
+      case FPCALL_MAX:
+        *dest = subfloat_compute_bin(op, w, *src1, *src2);
+        break;
+      case FPCALL_MADD:
+        *dest = subfloat_compute_madd(w, *dest, *src1, *src2);
+        break;
+      default:
+        panic("op = %d not supported for subfloat width %u", op, w);
+    }
+  }
+  else
   
   if (w == FPCALL_W16) {
     float16_t fsrc1 = rtlToVF16(*src1);

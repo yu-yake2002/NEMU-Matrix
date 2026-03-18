@@ -214,6 +214,8 @@ typedef struct {
     uint8_t  _8[TRENUM8];
   } mtr[4][ROWNUM];
 
+  uint8_t mtr_scale[4][ROWNUM][MX_SCALE_MAX_BLOCKS_ROW];
+
   union {
     uint64_t _64[ARENUM64];
     uint32_t _32[ARENUM32];

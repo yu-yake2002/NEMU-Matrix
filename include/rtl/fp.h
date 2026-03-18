@@ -23,12 +23,26 @@ enum {
   FPCALL_W64,
   FPCALL_W128,
   FPCALL_W80,
+  FPCALL_BF16,
+  FPCALL_E4M3,
+  FPCALL_E5M2,
+  FPCALL_MXFP8_E4M3,
+  FPCALL_MXFP8_E5M2,
   FPCALL_W16_to_32,
   FPCALL_W32_to_64,
   FPCALL_SRC1_W16_to_32,
   FPCALL_SRC2_W16_to_32,
   FPCALL_SRC1_W32_to_64,
   FPCALL_SRC2_W32_to_64,
+  FPCALL_BF16_to_32,
+  FPCALL_E4M3_to_16,
+  FPCALL_E4M3_to_32,
+  FPCALL_E5M2_to_16,
+  FPCALL_E5M2_to_32,
+  FPCALL_MXFP8_E4M3_to_16,
+  FPCALL_MXFP8_E4M3_to_32,
+  FPCALL_MXFP8_E5M2_to_16,
+  FPCALL_MXFP8_E5M2_to_32,
 };
 
 enum {
@@ -144,7 +158,7 @@ enum {
 };
 
 #define FPCALL_CMD(op, w) (((op) << 16) | (w))
-#define FPCALL_OP(cmd) ((cmd) >> 16)
-#define FPCALL_W(cmd)  ((cmd) & 0xf)
+#define FPCALL_OP(cmd) (((cmd) >> 16) & 0xffff)
+#define FPCALL_W(cmd)  ((cmd) & 0xffff)
 
 #endif

@@ -66,4 +66,13 @@ void get_mreg(int mtr_num, int mtr_row, int mtr_idx, rtlreg_t *dst, uint64_t mse
   }
 }
 
+void set_mx_scale(int mtr_num, int mtr_row, int block_idx, uint8_t scale) {
+  cpu.mtr_scale[check_mtreg_num(mtr_num)][check_mtreg_row(mtr_row)][check_mtreg_sfidx(block_idx)] = scale;
+}
+
+void get_mx_scale(int mtr_num, int mtr_row, int block_idx, uint8_t *scale) {
+  assert(scale != NULL);
+  *scale = cpu.mtr_scale[check_mtreg_num(mtr_num)][check_mtreg_row(mtr_row)][check_mtreg_sfidx(block_idx)];
+}
+
 #endif // CONFIG_RVMATRIX

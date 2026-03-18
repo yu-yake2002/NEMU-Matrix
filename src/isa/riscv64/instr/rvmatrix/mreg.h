@@ -50,6 +50,9 @@
 
 #define MTOK       32
 
+#define MX_SCALE_BLOCK_SIZE       32
+#define MX_SCALE_MAX_BLOCKS_ROW   (TRLEN / (4 * MX_SCALE_BLOCK_SIZE))
+
 static inline int check_mtreg_num(int num) {
   assert(num >= 0 && num < 4);
   return num;
@@ -75,6 +78,11 @@ static inline int check_mtreg_idx(int idx, int elen) {
   return idx;
 }
 
+static inline int check_mtreg_sfidx(int idx) {
+  assert(idx >= 0 && idx < MX_SCALE_MAX_BLOCKS_ROW);
+  return idx;
+}
+
 static inline int check_macc_idx(int idx, int elen) {
   assert(idx >= 0 && idx < ARLEN/elen);
   return idx;
@@ -91,6 +99,9 @@ static inline int check_macc_idx(int idx, int elen) {
 
 void set_mreg(int mtr_num, int mtr_row, int mtr_idx, rtlreg_t src_data, uint64_t msew);
 void get_mreg(int mtr_num, int mtr_row, int mtr_idx, rtlreg_t *dst, uint64_t msew, bool is_signed);
+
+void set_mx_scale(int mtr_num, int mtr_row, int block_idx, uint8_t scale);
+void get_mx_scale(int mtr_num, int mtr_row, int block_idx, uint8_t *scale);
 
 #endif //__RISCV64_MREG_H__
 

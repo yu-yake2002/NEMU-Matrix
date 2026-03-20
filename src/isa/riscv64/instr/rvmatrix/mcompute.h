@@ -288,7 +288,17 @@ def_EHelper(mmaccsu) {
       } \
       break; \
     case 2: \
-      FPCALL_TYPE = FPCALL_W32; \
+      switch (m_d_sz) { \
+        case 0: case 1: \
+          Loge("type not supported"); longjmp_exception(EX_II); \
+          break; \
+        case 2: \
+          FPCALL_TYPE = FPCALL_W32; \
+          break; \
+        case 3: \
+          FPCALL_TYPE = FPCALL_W32_to_64; \
+          break; \
+      }  \
       break; \
     case 3: \
       FPCALL_TYPE = FPCALL_W64; \

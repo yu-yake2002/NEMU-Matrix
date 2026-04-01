@@ -154,7 +154,15 @@ def_rtl(fpcall, rtlreg_t *dest, const rtlreg_t *src1, const rtlreg_t *src2, uint
   } else if (w == FPCALL_BF16) {
     bfloat16_t fsrc1 = rtlToBF16(*src1);
     switch(op) {
-      case FPCALL_BF16ToF32: *dest = my_bf16_to_f32(fsrc1).v; break;
+      case FPCALL_MAX:
+        *dest = subfloat_compute_bin(op, w, *src1, *src2);
+        break;
+      case FPCALL_MADD:
+        *dest = subfloat_compute_madd(w, *dest, *src1, *src2);
+        break;
+      case FPCALL_BF16ToF32:
+        *dest = my_bf16_to_f32(fsrc1).v;
+        break;
       default: panic("op = %d not supported for BF16 width", op);
     }
   } else if (w == FPCALL_W32) {
@@ -344,7 +352,15 @@ def_rtl(vfpcall, rtlreg_t *dest, const rtlreg_t *src1, const rtlreg_t *src2, uin
   } else if (w == FPCALL_BF16) {
     bfloat16_t fsrc1 = rtlToVBF16(*src1);
     switch (op) {
-      case FPCALL_BF16ToF32: *dest = bf16_to_f32(fsrc1).v; break;
+      case FPCALL_MAX:
+        *dest = subfloat_compute_bin(op, w, *src1, *src2);
+        break;
+      case FPCALL_MADD:
+        *dest = subfloat_compute_madd(w, *dest, *src1, *src2);
+        break;
+      case FPCALL_BF16ToF32:
+        *dest = bf16_to_f32(fsrc1).v;
+        break;
       default: panic("op = %d not supported", op);
     }
   } else if (w == FPCALL_W32 || w == FPCALL_W16_to_32 || w == FPCALL_SRC1_W16_to_32 || w == FPCALL_SRC2_W16_to_32) {

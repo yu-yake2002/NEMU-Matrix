@@ -349,7 +349,6 @@ static inline rtlreg_t encode_subfloat(uint32_t w, float32_t val) {
 
 bool is_powprec_width(uint32_t w) {
   switch (w) {
-    case FPCALL_BF16:
     case FPCALL_BF16_to_32:
     case FPCALL_E4M3:
     case FPCALL_E4M3_to_16:

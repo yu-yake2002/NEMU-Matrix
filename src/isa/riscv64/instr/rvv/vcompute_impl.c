@@ -1359,6 +1359,8 @@ void floating_arithmetic_instr(int opcode, int is_signed, int widening, int dest
       case FNCVT_FXU : rtl_hostcall(s, HOSTCALL_VFP, s1, s0, s1, FPCALL_CMD(FPCALL_DUToF, FPCALL_TYPE)); break;
       case FNCVT_FX : rtl_hostcall(s, HOSTCALL_VFP, s1, s0, s1, FPCALL_CMD(FPCALL_DSToF, FPCALL_TYPE)); break;
       case FNCVT_FF : rtl_hostcall(s, HOSTCALL_VFP, s1, s0, s1, FPCALL_CMD(FPCALL_DFToF, FPCALL_TYPE)); break;
+      case FWCVT_BF16_FF : rtl_hostcall(s, HOSTCALL_VFP, s1, s0, s1, FPCALL_CMD(FPCALL_BF16ToF32, FPCALL_BF16)); break;
+      case FNCVT_BF16_FF : rtl_hostcall(s, HOSTCALL_VFP, s1, s0, s1, FPCALL_CMD(FPCALL_F32ToBF16, FPCALL_W32)); break;
       case FWMACCBF16 :
         rtl_hostcall(s, HOSTCALL_VFP, s0, s0, s0, FPCALL_CMD(FPCALL_BF16ToF32, FPCALL_BF16));
         rtl_hostcall(s, HOSTCALL_VFP, s1, s1, s1, FPCALL_CMD(FPCALL_BF16ToF32, FPCALL_BF16));

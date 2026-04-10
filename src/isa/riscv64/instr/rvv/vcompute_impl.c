@@ -1300,8 +1300,9 @@ void floating_arithmetic_instr(int opcode, int is_signed, int widening, int dest
       case FNMSAC :
       case FMADD :
       case FNMADD :
-      case FMSUB : 
+      case FMSUB :
       case FNMSUB :
+      case FWMACCBF16 :
         if (widening == vsdWidening) get_vreg(id_dest->reg, idx, s2, vtype->vsew+1, vtype->vlmul, 0, 1);
         else get_vreg(id_dest->reg, idx, s2, vtype->vsew, vtype->vlmul, 0, 1);
         break;
